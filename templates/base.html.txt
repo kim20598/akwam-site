@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}أكوام - مشاهدة الأفلام والمسلسلات{% endblock %}</title>
+    <meta name="description" content="{% block description %}مشاهدة الأفلام والمسلسلات العربية والتركية والأجنبية مجاناً وبجودة عالية{% endblock %}">
+    <meta name="keywords" content="أفلام, مسلسلات, عربي, تركي, اجنبي, مشاهدة, اونلاين">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="{% block og_title %}أكوام{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}مشاهدة الأفلام والمسلسلات مجاناً{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}/assets/images/logo.png{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}https://akwam.com{% endblock %}">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}أكوام{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}مشاهدة الأفلام والمسلسلات مجاناً{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}/assets/images/logo.png{% endblock %}">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical_url %}https://akwam.com{% endblock %}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <a href="/" class="logo">
+                        <i class="fas fa-film"></i>
+                        <span>أكوام</span>
+                    </a>
+                </div>
+                
+                <div class="nav-menu">
+                    <ul class="nav-links">
+                        <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">
+                            <i class="fas fa-home"></i> الرئيسية
+                        </a></li>
+                        <li><a href="/movies.html" class="{% if 'movies' in request.path %}active{% endif %}">
+                            <i class="fas fa-video"></i> الأفلام
+                        </a></li>
+                        <li><a href="/series.html" class="{% if 'series' in request.path %}active{% endif %}">
+                            <i class="fas fa-tv"></i> المسلسلات
+                        </a></li>
+                        <li><a href="/shows.html" class="{% if 'shows' in request.path %}active{% endif %}">
+                            <i class="fas fa-play-circle"></i> العروض
+                        </a></li>
+                        <li class="dropdown">
+                            <a href="#"><i class="fas fa-bars"></i> الأقسام <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-content">
+                                <a href="/category/arabic">عربي</a>
+                                <a href="/category/turkish">تركي</a>
+                                <a href="/category/asian">اسيوي</a>
+                                <a href="/category/foreign">أجنبي</a>
+                                <a href="/category/indian">هندي</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-search">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل...">
+                        <button id="searchBtn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                
+                <div class="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>أكوام</h3>
+                    <p>منصة مشاهدة الأفلام والمسلسلات العربية والتركية والأجنبية مجاناً وبجودة عالية.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="/">الرئيسية</a></li>
+                        <li><a href="/movies.html">الأفلام</a></li>
+                        <li><a href="/series.html">المسلسلات</a></li>
+                        <li><a href="/shows.html">العروض</a></li>
+                        <li><a href="/about.html">عن الموقع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>الأقسام</h3>
+                    <ul>
+                        <li><a href="/category/arabic">عربي</a></li>
+                        <li><a href="/category/turkish">تركي</a></li>
+                        <li><a href="/category/asian">اسيوي</a></li>
+                        <li><a href="/category/foreign">أجنبي</a></li>
+                        <li><a href="/category/indian">هندي</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>الدعم</h3>
+                    <ul>
+                        <li><a href="/contact.html">اتصل بنا</a></li>
+                        <li><a href="/privacy.html">سياسة الخصوصية</a></li>
+                        <li><a href="/terms.html">شروط الاستخدام</a></li>
+                        <li><a href="/dmca.html">DMCA</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 أكوام. جميع الحقوق محفوظة. هذا الموقع لأغراض تعليمية فقط.</p>
+                <p>المحتوى من مصادر عامة على الإنترنت</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+    
+    <!-- Analytics Script (Placeholder) -->
+    <script>
+        // Add analytics code here
+        console.log('Akwam Website Loaded');
+    </script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+import re
+import hashlib
+import json
+from typing import Any, Dict, List, Optional
+from datetime import datetime, timedelta
+import aiohttp
+import asyncio
+from urllib.parse import urljoin, quote, urlparse
+
+class CacheManager:
+    """Manage caching for scraped content"""
+    
+    @staticmethod
+    def generate_cache_key(url: str, params: Dict = None) -> str:
+        """Generate a unique cache key for a URL"""
+        key_str = url
+        if params:
+            key_str += json.dumps(params, sort_keys=True)
+        return hashlib.md5(key_str.encode()).hexdigest()
+    
+    @staticmethod
+    def is_cache_valid(cache_timestamp: datetime, ttl_minutes: int = 60) -> bool:
+        """Check if cache is still valid"""
+        if not cache_timestamp:
+            return False
+        expiry_time = cache_timestamp + timedelta(minutes=ttl_minutes)
+        return datetime.now() < expiry_time
+
+class ContentParser:
+    """Parse and clean content from HTML"""
+    
+    @staticmethod
+    def clean_text(text: str) -> str:
+        """Clean and normalize Arabic text"""
+        if not text:
+            return ""
+        
+        # Remove extra whitespace
+        text = re.sub(r'\s+', ' ', text)
+        
+        # Clean Arabic text
+        arabic_chars = {
+            'أ': 'ا',
+            'إ': 'ا',
+            'آ': 'ا',
+            'ة': 'ه',
+            'ى': 'ي',
+        }
+        
+        for old, new in arabic_chars.items():
+            text = text.replace(old, new)
+        
+        return text.strip()
+    
+    @staticmethod
+    def extract_year(text: str) -> Optional[int]:
+        """Extract year from text"""
+        if not text:
+            return None
+        
+        match = re.search(r'\b(19|20)\d{2}\b', text)
+        if match:
+            return int(match.group())
+        return None
+    
+    @staticmethod
+    def extract_quality(text: str) -> str:
+        """Extract video quality from text"""
+        if not text:
+            return "SD"
+        
+        text = text.upper()
+        
+        quality_map = {
+            '1080': '1080p',
+            '720': '720p',
+            '480': '480p',
+            '360': '360p',
+            'HD': '720p',
+            'FHD': '1080p',
+            'UHD': '2160p',
+            '4K': '2160p',
+            'HQ': '720p',
+            'SQ': '480p',
+        }
+        
+        for key, value in quality_map.items():
+            if key in text:
+                return value
+        
+        return "SD"
+    
+    @staticmethod
+    def extract_duration(text: str) -> Optional[int]:
+        """Extract duration in minutes from text"""
+        if not text:
+            return None
+        
+        # Look for hours and minutes
+        hours = minutes = 0
+        
+        hour_match = re.search(r'(\d+)\s*ساعة', text)
+        if hour_match:
+            hours = int(hour_match.group(1))
+        
+        minute_match = re.search(r'(\d+)\s*دقيقة', text)
+        if minute_match:
+            minutes = int(minute_match.group(1))
+        
+        # Alternative formats
+        if not hours and not minutes:
+            match = re.search(r'(\d+):(\d+)', text)
+            if match:
+                hours = int(match.group(1))
+                minutes = int(match.group(2))
+        
+        return hours * 60 + minutes
+
+class URLValidator:
+    """Validate and normalize URLs"""
+    
+    @staticmethod
+    def is_valid_url(url: str) -> bool:
+        """Check if URL is valid"""
+        if not url:
+            return False
+        
+        try:
+            result = urlparse(url)
+            return all([result.scheme, result.netloc])
+        except:
+            return False
+    
+    @staticmethod
+    def normalize_url(url: str, base_url: str) -> str:
+        """Normalize URL by joining with base if needed"""
+        if not url:
+            return ""
+        
+        if url.startswith('http'):
+            return url
+        
+        if url.startswith('//'):
+            return f"https:{url}"
+        
+        if url.startswith('/'):
+            return urljoin(base_url, url)
+        
+        # Relative URL
+        if not url.startswith('http'):
+            return urljoin(base_url, '/' + url)
+        
+        return url
+    
+    @staticmethod
+    def extract_domain(url: str) -> str:
+        """Extract domain from URL"""
+        try:
+            parsed = urlparse(url)
+            return parsed.netloc
+        except:
+            return ""
+
+class RateLimiter:
+    """Rate limiting for requests"""
+    
+    def __init__(self, max_requests: int = 10, period: int = 60):
+        self.max_requests = max_requests
+        self.period = period
+        self.requests = []
+    
+    async def wait_if_needed(self):
+        """Wait if rate limit is reached"""
+        now = datetime.now()
+        
+        # Remove old requests
+        self.requests = [req for req in self.requests 
+                        if now - req < timedelta(seconds=self.period)]
+        
+        if len(self.requests) >= self.max_requests:
+            # Calculate wait time
+            oldest_request = min(self.requests)
+            wait_time = self.period - (now - oldest_request).seconds + 1
+            await asyncio.sleep(wait_time)
+        
+        self.requests.append(now)
+    
+    def reset(self):
+        """Reset rate limiter"""
+        self.requests.clear()
+
+class ErrorHandler:
+    """Handle and log errors"""
+    
+    @staticmethod
+    async def handle_request_error(error: Exception, url: str) -> Dict[str, Any]:
+        """Handle request errors gracefully"""
+        error_type = type(error).__name__
+        
+        # Log the error (in production, use proper logging)
+        print(f"Error fetching {url}: {error_type} - {str(error)}")
+        
+        return {
+            "error": True,
+            "message": f"Failed to fetch content: {error_type}",
+            "url": url,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    @staticmethod
+    def create_error_response(message: str, status_code: int = 500) -> Dict[str, Any]:
+        """Create a standardized error response"""
+        return {
+            "error": True,
+            "message": message,
+            "status_code": status_code,
+            "timestamp": datetime.now().isoformat()
+        }
+
+class PerformanceTracker:
+    """Track performance of operations"""
+    
+    def __init__(self):
+        self.metrics = {}
+    
+    def start_timer(self, operation: str):
+        """Start timer for an operation"""
+        self.metrics[operation] = {
+            'start': datetime.now(),
+            'end': None,
+            'duration': None
+        }
+    
+    def stop_timer(self, operation: str):
+        """Stop timer for an operation"""
+        if operation in self.metrics and self.metrics[operation]['start']:
+            end_time = datetime.now()
+            start_time = self.metrics[operation]['start']
+            duration = (end_time - start_time).total_seconds()
+            
+            self.metrics[operation]['end'] = end_time
+            self.metrics[operation]['duration'] = duration
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get all performance metrics"""
+        return self.metrics.copy()
