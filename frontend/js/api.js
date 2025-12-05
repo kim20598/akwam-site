@@ -78,4 +78,5 @@ class AkwamAPI {
 }
 
 // Create global API instance
+
 window.akwamAPI = new AkwamAPI();
