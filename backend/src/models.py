@@ -233,4 +233,5 @@ class APIResponse(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.now, description="Response timestamp")
     
     class Config:
+
         use_enum_values = True
