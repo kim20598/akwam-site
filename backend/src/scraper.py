@@ -300,4 +300,5 @@ class AkwamScraper:
         elif '360' in quality_str:
             return '360p'
         else:
+
             return 'SD'
