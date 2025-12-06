@@ -1,0 +1,370 @@
+/* Series Detail Page Styles */
+.series-detail-container {
+    padding-top: 100px;
+    background: var(--bg-dark);
+    min-height: 100vh;
+}
+
+.series-header {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    background: var(--bg-light);
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.series-poster-large img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.series-info-large {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.series-title {
+    font-size: 32px;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.series-original-title {
+    color: var(--text-secondary);
+    font-size: 18px;
+    margin: 0;
+}
+
+.series-meta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.series-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.status-badge {
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.status-badge.ongoing {
+    background: var(--success-color);
+}
+
+.status-badge.completed {
+    background: var(--primary-color);
+}
+
+.status-badge.cancelled {
+    background: #ff3333;
+}
+
+.series-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.series-genres {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Seasons Section */
+.seasons-section {
+    margin-top: 40px;
+}
+
+.seasons-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.season-tab {
+    background: var(--bg-dark);
+    border: none;
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.season-tab:hover {
+    background: rgba(229, 9, 20, 0.2);
+    color: var(--primary-color);
+}
+
+.season-tab.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.episode-count {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+/* Episodes Grid */
+.episodes-grid {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.episodes-grid.active {
+    display: flex;
+}
+
+.episode-card {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+    background: var(--bg-dark);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.episode-card:hover {
+    transform: translateY(-5px);
+}
+
+.episode-thumbnail {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+}
+
+.episode-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.episode-card:hover .episode-thumbnail img {
+    transform: scale(1.1);
+}
+
+.episode-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.episode-card:hover .episode-overlay {
+    opacity: 1;
+}
+
+.play-btn {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    transition: transform 0.3s;
+}
+
+.play-btn:hover {
+    transform: scale(1.1);
+}
+
+.duration-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.episode-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.episode-title {
+    font-size: 18px;
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+}
+
+.episode-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+}
+
+.episode-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.episode-meta span {
+    color: var(--text-secondary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.watch-later-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+}
+
+.watch-later-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Similar Series */
+.similar-section {
+    margin-top: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .series-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .series-poster-large {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .series-meta {
+        justify-content: center;
+    }
+    
+    .series-actions {
+        justify-content: center;
+    }
+    
+    .series-genres {
+        justify-content: center;
+    }
+    
+    .episode-card {
+        grid-template-columns: 150px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .series-detail-container {
+        padding-top: 80px;
+    }
+    
+    .series-title {
+        font-size: 24px;
+    }
+    
+    .episode-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .episode-thumbnail {
+        height: 200px;
+    }
+    
+    .episode-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .seasons-tabs {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .series-header,
+    .series-details {
+        padding: 20px;
+    }
+    
+    .series-title {
+        font-size: 20px;
+    }
+    
+    .series-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .series-actions {
+        flex-direction: column;
+    }
+    
+    .season-tab {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .episode-thumbnail {
+        height: 150px;
+    }
+
+}
